@@ -23,11 +23,30 @@ namespace Projektas
         {
             Console.WriteLine("Sveiki atvyke i protmusi");
             Console.WriteLine("Prisijunkite ivesdami varda ir pavarde");
-            Console.WriteLine("Vardas:");
-            string firstName = Console.ReadLine();
-            Console.WriteLine("Pavarde:");
-            string lastName = Console.ReadLine();
-            string fullName = firstName + " " + lastName;
+            string firstName = "";
+            string lastName = "";
+
+            while (string.IsNullOrEmpty(firstName))
+            {
+                Console.WriteLine("Vardas:");
+                firstName = Console.ReadLine();
+                if (string.IsNullOrEmpty(firstName))
+                {
+                    Console.WriteLine("Vardas negali buti tuscias, bandykite is naujo");
+                }
+            }
+            while (string.IsNullOrEmpty(lastName))
+            {
+                Console.WriteLine("Pavarde:");
+                lastName = Console.ReadLine();
+                if (string.IsNullOrEmpty(lastName))
+                {
+                    Console.WriteLine("Pavarde negali buti tuscia, bandykite is naujo");
+                }
+            }
+
+
+            string fullName = $"{firstName} {lastName}";
             Console.WriteLine($"Sveiki, {fullName}");
             Console.ReadKey();
             int userId = users.Count + 1;
@@ -93,12 +112,30 @@ namespace Projektas
             Console.WriteLine($"Atsijungta nuo {currentUser}");
             currentUser = "";
             Console.WriteLine("Noredami vel prisijungti iveskite varda ir pavarde");
-            Console.WriteLine("Vardas:");
-            string firstName = Console.ReadLine();
-            Console.WriteLine("Pavarde:");
-            string lastName = Console.ReadLine();
-            string fullName = firstName + " " + lastName;
-            Console.WriteLine($"Sveiki, {fullName}");
+            string firstName = "";
+            string lastName = "";
+
+            while (string.IsNullOrEmpty(firstName))
+            {
+                Console.WriteLine("Vardas:");
+                firstName = Console.ReadLine();
+                if (string.IsNullOrEmpty(firstName))
+                {
+                    Console.WriteLine("Vardas negali buti tuscias, bandykite is naujo");
+                }
+            }
+            while (string.IsNullOrEmpty(lastName))
+            {
+                Console.WriteLine("Pavarde:");
+                lastName = Console.ReadLine();
+                if (string.IsNullOrEmpty(lastName))
+                {
+                    Console.WriteLine("Pavarde negali buti tuscia, bandykite is naujo");
+                }
+            }
+
+
+            string fullName = $"{firstName} {lastName}";
 
             int userId = users.Count + 1;
 
