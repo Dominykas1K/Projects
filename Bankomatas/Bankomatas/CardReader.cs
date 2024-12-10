@@ -8,14 +8,13 @@ namespace Bankomatas
 {
     public class CardReader
     {
-        string file = "C:\\Users\\Boss\\Desktop\\Cards.txt";
-
+        string _file = "C:\\Users\\Boss\\Desktop\\Cards.txt";
 
         public List<Card> ReadCards()
         {
             List<Card> cards = new List<Card>();
 
-            string[] lines = File.ReadAllLines(file);
+            string[] lines = File.ReadAllLines(_file);
             foreach (string line in lines)
             {
                 string[] parts = line.Split(',');
@@ -23,6 +22,17 @@ namespace Bankomatas
                 cards.Add(card);
             }
             return cards;
+        }
+
+        public void SaveCards(List<Card> cards)
+        {
+            var lines = new List<string>();
+            foreach (var card in cards)
+            {
+                string line = $"{card.CardNumber},{card.Name},{card.Pin},{card.Balance}";
+                lines.Add(line);
+            }
+            File.WriteAllLines(_file, lines);
         }
     }
 }

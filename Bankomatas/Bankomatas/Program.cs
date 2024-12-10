@@ -28,7 +28,9 @@
                 if (pin == foundCard.Pin)
                 {
                     Console.WriteLine("Patvirtinta");
-                    //showmenu
+                    var menu = new Menu(foundCard, cards, cardReader);
+                    menu.ShowMenu();
+
                 }
                 else
                 {
@@ -39,6 +41,7 @@
             }
             Console.Clear();
             Console.WriteLine("Kortele uzblokuota!");
+            
 
         }
     }

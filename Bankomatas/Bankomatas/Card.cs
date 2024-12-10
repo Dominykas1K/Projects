@@ -12,6 +12,7 @@ namespace Bankomatas
         public string Name { get; set; }
         public int Pin { get; set; }
         public decimal Balance { get; set; }
+        public List<string> Transactions { get; set; }
 
         public Card(long cardNumber,string name, int pin, decimal balance)
         {
@@ -19,6 +20,17 @@ namespace Bankomatas
             Pin = pin;
             Name = name;
             Balance = balance;
+            Transactions = new List<string>();
         }
+
+        public void AddTransaction(string transaction)
+        {
+            Transactions.Add(transaction);
+            if (Transactions.Count > 5)
+            {
+                Transactions.RemoveAt(0);
+            }
+        }
+        
     }
 }
