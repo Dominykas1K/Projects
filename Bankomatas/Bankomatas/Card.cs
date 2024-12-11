@@ -13,6 +13,7 @@ namespace Bankomatas
         public int Pin { get; set; }
         public decimal Balance { get; set; }
         public List<string> Transactions { get; set; }
+        public int DailyTransactionCount { get; set; }
 
         public Card(long cardNumber,string name, int pin, decimal balance)
         {
@@ -30,6 +31,11 @@ namespace Bankomatas
             {
                 Transactions.RemoveAt(0);
             }
+            if (DailyTransactionCount >= 10)
+            {
+                throw new Exception();
+            }
+            DailyTransactionCount++;
         }
         
     }
