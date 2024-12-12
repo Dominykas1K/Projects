@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace Bankomatas
@@ -32,6 +34,8 @@ namespace Bankomatas
 
                 string input = Console.ReadLine();
 
+                Console.Clear();
+
                 switch (input)
                 {
                     case "1":
@@ -44,8 +48,12 @@ namespace Bankomatas
                         DepositMoney(); 
                         break;
                     case "4":
-                        ShowLastTransactions(); 
+                        ShowLastTransactions();
                         break;
+                    default:
+                        Console.WriteLine("Neteisinga ivestis");
+                        break;
+
 
                 }
             }
@@ -53,13 +61,20 @@ namespace Bankomatas
 
         public void ShowBalance()
         {
+            Console.Clear();
             Console.WriteLine($"Jusu balansas: {_currentCard.Balance}");
+            Console.WriteLine("Paspauskite bet kuri mygtuka noredami gristi atgal i meniu");
+            Console.ReadKey();
+            Console.Clear();
+
         }
         public void WithdrawMoney()
         {
             Console.WriteLine("Iveskite suma kuria norite issiimti");
 
             string input = Console.ReadLine();
+
+            //Console.Clear();
 
             if (decimal.TryParse(input, out decimal amount))
             {
@@ -79,22 +94,35 @@ namespace Bankomatas
                     _cardReader.SaveCards(_allCards);
                 }
             }
+            else
+            {
+                Console.WriteLine("Netinkamas formatas iveskite skaiciu");
+            }
         }
         public void DepositMoney()
         {
             Console.WriteLine("Ivesktie suma kuria norite ideti");
 
             string input = Console.ReadLine();
-            if (decimal.TryParse(input,out decimal amount))
+
+            //Console.Clear();
+
+            if (decimal.TryParse(input, out decimal amount))
             {
                 _currentCard.Balance += amount;
                 _currentCard.AddTransaction($"Ideta: {amount} e");
                 Console.WriteLine($"Sekmingai idejote: {amount} e , likutis: {_currentCard.Balance}");
                 _cardReader.SaveCards(_allCards);
             }
+            else
+            {
+                Console.WriteLine("Netinkamas formatas iveskite skaiciu");
+            }
         }
         public void ShowLastTransactions()
         {
+            Console.Clear();
+
             if (_currentCard.Transactions.Count == 0)
             {
                 Console.WriteLine("Nebuvo jokiu transakciju");
@@ -106,8 +134,13 @@ namespace Bankomatas
                     Console.WriteLine(transaction);
                 }
             }
+
+            Console.WriteLine("Paspauskite bet kuri mygtuka noredami gristi atgal i meniu");
+            Console.ReadKey();
+            Console.Clear();
+
+
         }
-
-
+        
     }
 }
