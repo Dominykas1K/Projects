@@ -14,7 +14,7 @@ namespace Restaurant_app
         {
             using (var client = new SmtpClient("smtp.office365.com", 587))
             {
-                client.Credentials = new NetworkCredential("dominykas.kazlauskas@codeacademylt.onmicrosoft.com", "dDjugtLmiKuTn6H");
+                client.Credentials = new NetworkCredential("dominykas.kazlauskas@codeacademylt.onmicrosoft.com", "password");
                 client.EnableSsl = true;
 
                 var mailMessage = new MailMessage("dominykas.kazlauskas@codeacademylt.onmicrosoft.com", to, subject, body);
