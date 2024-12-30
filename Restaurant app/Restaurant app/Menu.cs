@@ -15,10 +15,8 @@ namespace Restaurant_app
             {
                 var foodJson = File.ReadAllText("C:\\Users\\Boss\\Desktop\\c#\\Github\\Projects\\Restaurant app\\Restaurant app\\FoodItems.json");
                 var foodItems = JsonSerializer.Deserialize<Dictionary<string, decimal>>(foodJson);
-                foreach (var item in foodItems)
-                {
-                    FoodItems.Add(new MenuItems(item.Key, item.Value));
-                }
+                FoodItems.AddRange(from item in foodItems
+                                   select new MenuItems(item.Key, item.Value));
             }
             else
             {
@@ -29,10 +27,8 @@ namespace Restaurant_app
             {
                 var drinkJson = File.ReadAllText("C:\\Users\\Boss\\Desktop\\c#\\Github\\Projects\\Restaurant app\\Restaurant app\\DrinkItems.json");
                 var drinkItems = JsonSerializer.Deserialize<Dictionary<string, decimal>>(drinkJson);
-                foreach (var item in drinkItems)
-                {
-                    DrinkItems.Add(new MenuItems(item.Key, item.Value));
-                }
+                DrinkItems.AddRange(from item in drinkItems
+                                    select new MenuItems(item.Key, item.Value));
             }
             else
             {

@@ -9,43 +9,49 @@ namespace Restaurant_app
 
         public void InitializeSystem()
         {
-            for (int i = 1; i <= 10; i++)
-            {
-                Tables.Add(new Table(i, 4));
-            }
+            Tables.Add(new Table(1, 2));
+            Tables.Add(new Table(2, 4));
+            Tables.Add(new Table(3, 6));
+            Tables.Add(new Table(4, 4));
+            Tables.Add(new Table(5, 2));           
 
             Menu.LoadMenuItems();
         }
 
         public void SystemMenu()
         {
-            Console.WriteLine("=== Restaurant System ===");
-            Console.WriteLine("1. Staliukai");
-            Console.WriteLine("2. Pildyti uzsakyma");
-            Console.WriteLine("3. Atlaisvinti staliuka");
-            Console.WriteLine("4. Iseiti");
-
-            string input = Console.ReadLine();
-
-            switch (input)
+            while (true)
             {
-                case "1":
-                    ViewTables();
-                    break;
-                case "2":
-                    CreateOrder();
-                    break;
-                case "3":
-                    FreeTable();
-                    break;
-                case "4":
-                    Environment.Exit(0);
-                    break;
-                default:
-                    Console.WriteLine("netinkamas pasirinkimas");
-                    break;
+                Console.Clear();
+                Console.WriteLine("=== Restaurant System ===");
+                Console.WriteLine("1. Staliukai");
+                Console.WriteLine("2. Pildyti uzsakyma");
+                Console.WriteLine("3. Atlaisvinti staliuka");
+                Console.WriteLine("4. Iseiti");
+
+                string? input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case "1":
+                        ViewTables();
+                        break;
+                    case "2":
+                        CreateOrder();
+                        break;
+                    case "3":
+                        FreeTable();
+                        break;
+                    case "4":
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        Console.WriteLine("Netinkamas pasirinkimas, bandykite dar karta.");
+                        break;
+                }
             }
         }
+
         public void ViewTables()
         {
             while (true)
@@ -54,22 +60,24 @@ namespace Restaurant_app
                 Console.WriteLine("=== Staliukai ===");
                 foreach (var table in Tables)
                 {
-                    Console.WriteLine($"Staliukas nr: {table.TableNumber}: {(table.IsOccupied ? "Uzimtas" : "Laisvas")}");
+                    Console.WriteLine($"Staliukas nr: {table.TableNumber}");
+                    Console.WriteLine($"Vietu skaicius: {table.TableSeats}");
+                    Console.WriteLine($"Būsena: {(table.IsOccupied ? "Užimtas" : "Laisvas")}");
+                    Console.WriteLine(new string('-', 30));
                 }
                 Console.WriteLine("Noredami gristi atgal i menu spauskite 0");
-                int.TryParse(Console.ReadLine(), out int input);
-                Console.Clear();
-                if (input == 0)
+                if (int.TryParse(Console.ReadLine(), out int input) && input == 0)
                 {
-                    SystemMenu();
+                    Console.Clear();
+                    return;
                 }
                 else
                 {
-                    Console.WriteLine("Neteisinga ivesits");
+                    Console.WriteLine("Neteisinga ivesits, bandykite dar karta.");
                 }
-                
             }
         }
+
         public void CreateOrder()
         {
             while (true)
@@ -77,20 +85,20 @@ namespace Restaurant_app
                 Console.WriteLine("Pasirinkite staliuka");
                 if (!int.TryParse(Console.ReadLine(), out int tableNumber))
                 {
-                    Console.WriteLine("Neteisingas staliuko numeris");
+                    Console.WriteLine("Neteisingas staliuko numeris, bandykite dar karta.");
                     continue;
                 }
 
                 var table = Tables.Find(t => t.TableNumber == tableNumber);
                 if (table == null)
                 {
-                    Console.WriteLine("Neteisingas staliuko numeris");
+                    Console.WriteLine("Neteisingas staliuko numeris, bandykite dar karta.");
                     continue;
                 }
 
                 if (table.IsOccupied)
                 {
-                    Console.WriteLine("Staliukas uzimtas");
+                    Console.WriteLine("Staliukas uzimtas, bandykite kita staliuka.");
                     continue;
                 }
 
@@ -107,7 +115,7 @@ namespace Restaurant_app
 
                     if (!int.TryParse(Console.ReadLine(), out int menuChoice))
                     {
-                        Console.WriteLine("Neteisingas pasirinkimas, bandykite dar karta");
+                        Console.WriteLine("Neteisingas pasirinkimas, bandykite dar karta.");
                         continue;
                     }
 
@@ -127,36 +135,43 @@ namespace Restaurant_app
                     }
                     else
                     {
-                        Console.WriteLine("Neteisingas pasirinkimas, bandykite dar karta");
+                        Console.WriteLine("Neteisingas pasirinkimas, bandykite dar karta.");
                     }
                 }
 
                 Orders.Add(order);
-                Console.WriteLine($"Uzsakymas padarytas {table.TableNumber} staliukui, suma: {order.TotalPrice} ");               
-                PrintAndSaveReceipts(order);
+                PrintAndSaveReceipts(order, new EmailSender());
                 Console.ReadKey();
                 Console.Clear();
-                SystemMenu();
+                return;
             }
         }
 
-        private void PrintAndSaveReceipts(Order order)
+        private static void PrintAndSaveReceipts(Order order, IEmailSender emailSender)
         {
             string restaurantReceipt = Receipt.GenerateRestaurantReceipt(order);
             Console.WriteLine(restaurantReceipt);
-            string filePath = $"C:\\Users\\Boss\\Desktop\\c#\\Github\\Projects\\Restaurant app\\Restaurant app\\Cekiai\\receipt.txt";
+            string filePath = $"C:\\Users\\Boss\\Desktop\\c#\\Github\\Projects\\Restaurant app\\Restaurant app\\Cekiai\\receipt_{DateTime.Now:yyyyMMddHHmmss}.txt";
             File.WriteAllText(filePath, restaurantReceipt);
-           
+
             Console.WriteLine("Ar klientas pageidauja cekio? (taip/ne)");
-            string customerResponse = Console.ReadLine()?.ToLower();
+            string? customerResponse = Console.ReadLine()?.ToLower();
             if (customerResponse == "taip")
             {
                 string customerReceipt = Receipt.GenerateCustomerReceipt(order);
                 Console.WriteLine(customerReceipt);
+
+                Console.WriteLine("Iveskite kliento el. pasto adresa:");
+                string? email = Console.ReadLine();
+                if(!string.IsNullOrEmpty(email))
+                {
+                    emailSender.SendEmail(email, "Jusu uzsakymo cekis", customerReceipt);
+                    Console.WriteLine("Cekis issiustas el. pastu");
+                }
             }
         }
 
-        private void DisplayMenu(Order order, List<MenuItems> items, string menuType)
+        private static void DisplayMenu(Order order, List<MenuItems> items, string menuType)
         {
             while (true)
             {
@@ -170,7 +185,7 @@ namespace Restaurant_app
 
                 if (!int.TryParse(Console.ReadLine(), out int itemNumber) || itemNumber < 0 || itemNumber > items.Count)
                 {
-                    Console.WriteLine("Neteisingas pasirinkimas, bandykite dar karta");
+                    Console.WriteLine("Neteisingas pasirinkimas, bandykite dar karta.");
                     continue;
                 }
 
@@ -183,37 +198,43 @@ namespace Restaurant_app
                 order.AddItem(menuItem);
                 Console.WriteLine($"{menuItem.Name} idetas i uzsakyma");
                 Thread.Sleep(1000);
-
             }
         }
+
         public void FreeTable()
         {
-            Console.WriteLine("Pasirinkite kuri staliuka norite atlaisvinti");
-            if (!int.TryParse(Console.ReadLine(), out int tableNumber))
+            while (true)
             {
-                Console.WriteLine("Neteisingas staliuko numeris");
+                Console.WriteLine("Pasirinkite kuri staliuka norite atlaisvinti (0 - grizti i pagrindini meniu)");
+                if (!int.TryParse(Console.ReadLine(), out int tableNumber))
+                {
+                    Console.WriteLine("Neteisingas staliuko numeris, bandykite dar karta.");
+                    continue;
+                }
+
+                if (tableNumber == 0)
+                {
+                    return;
+                }
+
+                var table = Tables?.FirstOrDefault(t => t.TableNumber == tableNumber);
+                if (table == null)
+                {
+                    Console.WriteLine("Staliukas nerastas, bandykite dar karta.");
+                    continue;
+                }
+
+                if (!table.IsOccupied)
+                {
+                    Console.WriteLine("Staliukas jau yra laisvas.");
+                    continue;
+                }
+
+                table.Free();
+                Console.WriteLine($"Staliukas {table.TableNumber} atlaisvintas");
                 return;
             }
-
-            var table = Tables?.FirstOrDefault(t => t.TableNumber == tableNumber);
-            if (table == null)
-            {
-                Console.WriteLine("Staliukas nerastas");
-                return;
-            }
-
-            if (!table.IsOccupied)
-            {
-                Console.WriteLine("Staliukas jau yra laisvas");
-                return;
-            }
-
-            table.Free();
-            Console.WriteLine($"Staliukas {table.TableNumber} atlaisvintas");
-
-
         }
-        
     }
 
 }
