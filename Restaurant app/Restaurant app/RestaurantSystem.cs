@@ -13,7 +13,7 @@ namespace Restaurant_app
             Tables.Add(new Table(2, 4));
             Tables.Add(new Table(3, 6));
             Tables.Add(new Table(4, 4));
-            Tables.Add(new Table(5, 2));           
+            Tables.Add(new Table(5, 2));
 
             Menu.LoadMenuItems();
         }

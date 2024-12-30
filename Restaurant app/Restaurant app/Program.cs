@@ -6,8 +6,7 @@
         {
             var restaurantSystem = new RestaurantSystem();
             restaurantSystem.InitializeSystem();
-            restaurantSystem.SystemMenu();
-            
+            restaurantSystem.SystemMenu();          
         }
     }
 }
