@@ -205,15 +205,20 @@ namespace Restaurant_app
         {
             while (true)
             {
+                Console.Clear();
+                Console.WriteLine("=== Atlaisvinti staliuka ===");
                 Console.WriteLine("Pasirinkite kuri staliuka norite atlaisvinti (0 - grizti i pagrindini meniu)");
+
                 if (!int.TryParse(Console.ReadLine(), out int tableNumber))
                 {
                     Console.WriteLine("Neteisingas staliuko numeris, bandykite dar karta.");
+                    Thread.Sleep(2000);
                     continue;
                 }
 
                 if (tableNumber == 0)
                 {
+                    Console.Clear();
                     return;
                 }
 
@@ -221,17 +226,21 @@ namespace Restaurant_app
                 if (table == null)
                 {
                     Console.WriteLine("Staliukas nerastas, bandykite dar karta.");
+                    Thread.Sleep(2000);
                     continue;
                 }
 
                 if (!table.IsOccupied)
                 {
                     Console.WriteLine("Staliukas jau yra laisvas.");
+                    Thread.Sleep(2000);
                     continue;
                 }
 
                 table.Free();
                 Console.WriteLine($"Staliukas {table.TableNumber} atlaisvintas");
+                Thread.Sleep(2000);
+                Console.Clear();
                 return;
             }
         }

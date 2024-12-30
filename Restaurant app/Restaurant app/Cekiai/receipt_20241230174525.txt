@@ -1,0 +1,13 @@
+******************************
+* Restorano Cekis - Staliukas 1 *
+******************************
+Data: 30/12/2024 17:45:13
+Prekes:
+- Cepelinai: 8.99 EUR
+- Gira: 2.49 EUR
+------------------------------
+Viso: 11.48 EUR
+------------------------------
+Staliuko vietu skaicius: 2
+Staliuko uzimtumas: Uzimtas
+******************************
