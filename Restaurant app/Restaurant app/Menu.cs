@@ -6,9 +6,10 @@ namespace Restaurant_app
 {
     public class Menu
     {
-        public List<MenuItems> Items { get; set; } = new List<MenuItems>();
+        public List<MenuItems> FoodItems { get; set; } = new List<MenuItems>();
+        public List<MenuItems> DrinkItems { get; set; } = new List<MenuItems>();
 
-        public void LoadMenuItems(string foodFilePath, string drinkFilePath)
+        public void LoadMenuItems()
         {
             if (File.Exists("C:\\Users\\Boss\\Desktop\\c#\\Github\\Projects\\Restaurant app\\Restaurant app\\FoodItems.json"))
             {
@@ -16,7 +17,7 @@ namespace Restaurant_app
                 var foodItems = JsonSerializer.Deserialize<Dictionary<string, decimal>>(foodJson);
                 foreach (var item in foodItems)
                 {
-                    Items.Add(new MenuItems(item.Key, item.Value));
+                    FoodItems.Add(new MenuItems(item.Key, item.Value));
                 }
             }
             else
@@ -24,15 +25,18 @@ namespace Restaurant_app
                 Console.WriteLine("food file not found");
             }
 
-            if (File.Exists("C:\\Users\\Boss\\Desktop\\c#\\Github\\Projects\\Restaurant app\\Restaurant app\\DrinkItems.json"))
-             
+            if (File.Exists("C:\\Users\\Boss\\Desktop\\c#\\Github\\Projects\\Restaurant app\\Restaurant app\\DrinkItems.json"))            
             {
                 var drinkJson = File.ReadAllText("C:\\Users\\Boss\\Desktop\\c#\\Github\\Projects\\Restaurant app\\Restaurant app\\DrinkItems.json");
                 var drinkItems = JsonSerializer.Deserialize<Dictionary<string, decimal>>(drinkJson);
                 foreach (var item in drinkItems)
                 {
-                    Items.Add(new MenuItems(item.Key, item.Value));
+                    DrinkItems.Add(new MenuItems(item.Key, item.Value));
                 }
+            }
+            else
+            {
+                Console.WriteLine("drink file not found");
             }
 
         }

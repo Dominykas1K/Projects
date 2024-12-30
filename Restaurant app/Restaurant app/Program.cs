@@ -5,8 +5,8 @@
         static void Main(string[] args)
         {
             var restaurantSystem = new RestaurantSystem();
-            restaurantSystem.SystemMenu();
             restaurantSystem.InitializeSystem();
+            restaurantSystem.SystemMenu();
             
         }
     }
