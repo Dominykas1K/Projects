@@ -1,4 +1,5 @@
 ﻿using DB_projektas.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,10 +23,12 @@ namespace DB_projektas.Repositories
 
             Console.WriteLine("Departamentas pridetas");
             Console.ReadKey();
+            Console.Clear();
         }
 
         public void AddToDepartment(AppDbContext context)
         {
+            Console.Clear();
             Console.WriteLine("Iveskite departamento pavadinima");
             string input = Console.ReadLine();
 
@@ -37,47 +40,49 @@ namespace DB_projektas.Repositories
                 return;
             }
 
-            Console.WriteLine("1. Prideti studenta");
-            Console.WriteLine("2. Prideti paskaita");
-            Console.WriteLine("Iveskite pasirinkima");
-            
-            string choice = Console.ReadLine();
+            Console.WriteLine("Iveskite paskaitos Pavadinima");
+            string lectureName = Console.ReadLine();
 
-            if (choice == "1")
-            {
-                Console.WriteLine("Ivesktie studento varda");
-                string studentName = Console.ReadLine();
+            var lecture = new Lecture { Title = lectureName };
+            department.Lectures.Add(lecture);
+            context.SaveChanges();
 
-                var student = new Student { Name = studentName, DepartmentID = department.Id};
-                context.Students.Add(student);
-                context.SaveChanges();
-
-                Console.WriteLine("Studentas pridetas");
-            }
-
-            if (choice == "2")
-            {
-                Console.WriteLine("Iveskite Paskaitos Pavadinima");
-                string lectureName = Console.ReadLine();
-
-                var lecture = new Lecture { Title = lectureName };
-                department.Lectures.Add(lecture);
-                context.SaveChanges();
-
-                Console.WriteLine("Paskaita prideta");
-            }
-            else 
-            {
-                Console.WriteLine("Neteisingas pasirinkimas");
-            }
-
-
-
+            Console.WriteLine("Paskaita prideta");
+                      
+            Console.ReadKey();
+            Console.Clear();
         }
 
-        
-        
+        public void DisplayStudents(AppDbContext context)
+        {
+            Console.Clear();
+            Console.WriteLine("Iveskite departamento pavadinima");
+            string departmentName = Console.ReadLine();
 
+            var department = context.Departments.FirstOrDefault(d => d.Name == departmentName);
+            if (department == null)
+            {
+                Console.WriteLine("Departamentas nerastas");
+                return;
+            }
+
+            var students = context.Students.Where(s =>s.DepartmentID == department.Id).ToList();
+
+            Console.WriteLine($"Departamento \"{department.Name}\"  studentai:");
+            if (students.Count == 0)
+            {
+                Console.WriteLine("Siame departamente nera studentu");
+            }
+            else
+            {
+                foreach (var student in students)
+                {
+                    Console.WriteLine(student.Name);
+                }
+            }
+            Console.ReadKey();
+            Console.Clear();
+        }
     }
 }
 

@@ -13,18 +13,19 @@ namespace DB_projektas
     {
         public void Run()
         {
-            DepartmentRepository departmentRepository = new DepartmentRepository();
+            var departmentRepository = new DepartmentRepository();
+            var lectureRepository = new LectureRepository();
+            var studentRepository = new StudentRepository();
             while (true)
             {
                 Console.WriteLine("Studentu informacine sistema");
                 Console.WriteLine("1. Sukurti Departamenta");
-                Console.WriteLine("2. Prideti Studentus/Paskaitas i Departamenta");
-                Console.WriteLine("3. Sukurti Paskaita ir Priskirti i Departamenta");
-                Console.WriteLine("4. Sukurti studenta, ji prideti prie egzistuojancio departamento ir priskirti jam egzistuojančias paskaitas.");
-                Console.WriteLine("5. Perkelti Studenta i kita Departamenta");
-                Console.WriteLine("6. Atvaizduoti visus Departamento studentus");
-                Console.WriteLine("7. Atvaizduoti visas Departamento paskaitas");
-                Console.WriteLine("8. Atvaizduoti visas Paskaitas pagal studenta");
+                Console.WriteLine("2. Prideti Paskaitas i Departamenta");
+                Console.WriteLine("3. Sukurti studenta, ji prideti prie egzistuojancio departamento ir priskirti jam egzistuojančias paskaitas");
+                Console.WriteLine("4. Perkelti Studenta i kita Departamenta");
+                Console.WriteLine("5. Atvaizduoti visus Departamento studentus");
+                Console.WriteLine("6. Atvaizduoti visas Departamento paskaitas");
+                Console.WriteLine("7. Atvaizduoti visas Paskaitas pagal studenta");
 
                 var input = Console.ReadLine();
 
@@ -37,18 +38,20 @@ namespace DB_projektas
                         break;
                     case "2":
                         departmentRepository.AddToDepartment(context);
-                        break;
+                        break;                   
                     case "3":
+                        studentRepository.AddStudentToLecture(context);
                         break;
                     case "4":
                         break;
                     case "5":
+                        departmentRepository.DisplayStudents(context);                      
                         break;
                     case "6":
+                        lectureRepository.DisplayLectures(context);
                         break;
                     case "7":
-                        break;
-                    case "8":
+                        studentRepository.DisplayLecturesByStudents(context);
                         break;
                     default:
                         Console.WriteLine("Neteisingas pasirinkimas");

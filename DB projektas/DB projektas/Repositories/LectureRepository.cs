@@ -1,4 +1,5 @@
 ﻿using DB_projektas.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,28 +10,36 @@ using System.Threading.Tasks;
 namespace DB_projektas.Repositories
 {
     public class LectureRepository
-    {
-        public void CreateLecture(AppDbContext context)
+    {       
+        public void DisplayLectures(AppDbContext context)
         {
-            Console.WriteLine("Ivesktie paskaitos pavadinima");
-            string lectureName = Console.ReadLine();
-
+            Console.Clear();
             Console.WriteLine("Iveskite departamento pavadinima");
-            string deparmentName = Console.ReadLine();
 
-            var department = context.Departments.FirstOrDefault(d =>  d.Name == deparmentName);
+            string departmentName = Console.ReadLine();
+
+            var department = context.Departments.Include(d => d.Lectures).FirstOrDefault(d => d.Name == departmentName);
+
             if (department == null)
             {
-                Console.WriteLine("departamentas nerastas");
+                Console.WriteLine("Departamentas nerastas");
+                return;
             }
 
-            var lecture = new Lecture { Title = lectureName };
-            context.Lectures.Add(lecture);
-            context.SaveChanges();
-
-            Console.WriteLine("Paskaita prideta");
-
-
+            Console.WriteLine($"Departamento \"{department.Name}\"  paskaitos:");
+            if(!department.Lectures.Any())
+            {
+                Console.WriteLine("Paskaitu departamente nera");
+            }
+            else
+            {
+                foreach (var lecture in department.Lectures)
+                {
+                    Console.WriteLine($"{lecture.Title}");
+                }
+            }
+            Console.ReadKey();
+            Console.Clear();
         }
     }
 }
