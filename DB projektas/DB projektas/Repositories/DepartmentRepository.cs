@@ -16,7 +16,7 @@ namespace DB_projektas.Repositories
         {
             Console.Clear();
             Console.WriteLine("Iveskite departamento pavadinima");
-            string input = Console.ReadLine();
+            string input = ImputHandler.FormatedInput();
             var existingDepartment = context.Departments.FirstOrDefault(d => d.Name == input);
             if (existingDepartment != null)
             {
@@ -38,7 +38,7 @@ namespace DB_projektas.Repositories
         {
             Console.Clear();
             Console.WriteLine("Iveskite departamento pavadinima");
-            string input = Console.ReadLine();
+            string input = ImputHandler.FormatedInput();
 
             var department = context.Departments.FirstOrDefault(d => d.Name == input);
 
@@ -49,7 +49,7 @@ namespace DB_projektas.Repositories
             }
 
             Console.WriteLine("Iveskite paskaitos pavadinima");
-            string lectureName = Console.ReadLine();
+            string lectureName = ImputHandler.FormatedInput();
 
             var existingLecture = department.Lectures.FirstOrDefault(l => l.Title == lectureName);
             if (existingLecture != null)
@@ -71,7 +71,7 @@ namespace DB_projektas.Repositories
         {
             Console.Clear();
             Console.WriteLine("Iveskite departamento pavadinima");
-            string departmentName = Console.ReadLine();
+            string departmentName = ImputHandler.FormatedInput(); 
 
             var department = context.Departments.FirstOrDefault(d => d.Name == departmentName);
             if (department == null)

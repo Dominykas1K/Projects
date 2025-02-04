@@ -14,10 +14,10 @@ namespace DB_projektas.Repositories
         {
             Console.Clear();
             Console.WriteLine("Iveskite studento varda ir pavarde");
-            string studentName = Console.ReadLine();
+            string studentName = ImputHandler.FormatedInput();
         
             Console.WriteLine("Iveskite departamento pavadinima");
-            string departmentName = Console.ReadLine();
+            string departmentName = ImputHandler.FormatedInput();
 
             var department = context.Departments.Include(d => d.Lectures).FirstOrDefault(d => d.Name == departmentName);
 
@@ -57,10 +57,10 @@ namespace DB_projektas.Repositories
         {
             Console.Clear();
             Console.WriteLine("Iveskite studento varda ir pavarde");
-            string studentName = Console.ReadLine();
+            string studentName = ImputHandler.FormatedInput();
 
             Console.WriteLine("Iveskite naujo departamento pavadinima");
-            string newDepartmentName = Console.ReadLine();
+            string newDepartmentName = ImputHandler.FormatedInput();
 
             var student = context.Students.Include(s => s.Lectures).FirstOrDefault(s => s.Name == studentName);
 
@@ -91,7 +91,7 @@ namespace DB_projektas.Repositories
         {
             Console.Clear();
             Console.WriteLine("Iveskite Studento varda ir pavarde");
-            string studentName = Console.ReadLine();
+            string studentName = ImputHandler.FormatedInput();
 
             var student = context.Students.Include(s => s.Lectures).FirstOrDefault(s => s.Name == studentName);
 

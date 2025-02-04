@@ -16,7 +16,7 @@ namespace DB_projektas.Repositories
             Console.Clear();
             Console.WriteLine("Iveskite departamento pavadinima");
 
-            string departmentName = Console.ReadLine();
+            string departmentName = ImputHandler.FormatedInput();
 
             var department = context.Departments.Include(d => d.Lectures).FirstOrDefault(d => d.Name == departmentName);
 
@@ -50,7 +50,7 @@ namespace DB_projektas.Repositories
             context.Departments.RemoveRange(context.Departments);
 
             context.SaveChanges();
-            Console.WriteLine("All data deleted successfully!");
+            Console.WriteLine("Irasai istrinti");
             Console.ReadKey();
             Console.Clear();
         }
