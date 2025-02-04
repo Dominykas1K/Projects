@@ -41,5 +41,19 @@ namespace DB_projektas.Repositories
             Console.ReadKey();
             Console.Clear();
         }
+
+        public void DeleteAllData(AppDbContext context)
+        {
+            Console.Clear();
+            context.Students.RemoveRange(context.Students);
+            context.Lectures.RemoveRange(context.Lectures);
+            context.Departments.RemoveRange(context.Departments);
+
+            context.SaveChanges();
+            Console.WriteLine("All data deleted successfully!");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
     }
 }

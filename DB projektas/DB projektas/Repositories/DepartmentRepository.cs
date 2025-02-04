@@ -17,11 +17,19 @@ namespace DB_projektas.Repositories
             Console.Clear();
             Console.WriteLine("Iveskite departamento pavadinima");
             string input = Console.ReadLine();
-            var department = new Department { Name = input };
-            context.Departments.Add(department);
-            context.SaveChanges();
+            var existingDepartment = context.Departments.FirstOrDefault(d => d.Name == input);
+            if (existingDepartment != null)
+            {
+                Console.WriteLine("Toks departamentas jau egzistuoja");
+            }
+            else
+            {
+                var department = new Department { Name = input };
+                context.Departments.Add(department);
+                context.SaveChanges();
 
-            Console.WriteLine("Departamentas pridetas");
+                Console.WriteLine("Departamentas pridetas");
+            }
             Console.ReadKey();
             Console.Clear();
         }
@@ -40,15 +48,21 @@ namespace DB_projektas.Repositories
                 return;
             }
 
-            Console.WriteLine("Iveskite paskaitos Pavadinima");
+            Console.WriteLine("Iveskite paskaitos pavadinima");
             string lectureName = Console.ReadLine();
 
-            var lecture = new Lecture { Title = lectureName };
-            department.Lectures.Add(lecture);
-            context.SaveChanges();
-
-            Console.WriteLine("Paskaita prideta");
-                      
+            var existingLecture = department.Lectures.FirstOrDefault(l => l.Title == lectureName);
+            if (existingLecture != null)
+            {
+                Console.WriteLine("Tokia paskaita siame departamente jau egzistuoja");
+            }
+            else
+            {
+                var lecture = new Lecture { Title = lectureName };
+                department.Lectures.Add(lecture);
+                context.SaveChanges();
+                Console.WriteLine("Paskaita prideta");
+            }
             Console.ReadKey();
             Console.Clear();
         }

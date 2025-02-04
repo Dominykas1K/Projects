@@ -27,7 +27,7 @@ namespace DB_projektas.Repositories
                 return;
             }
 
-            var student = context.Students.FirstOrDefault(s => s.Name == studentName);
+            var student = context.Students.Include(s => s.Lectures).FirstOrDefault(s => s.Name == studentName);
             if (student == null)
             {
                 student = new Entities.Student { Name = studentName, Department = department };
@@ -38,14 +38,53 @@ namespace DB_projektas.Repositories
                 student.Department = department;
             }
 
-            student.Lectures = department.Lectures.ToList();
-            context.SaveChanges();
-            Console.WriteLine($"Studentas {student.Name} priskirtas prie \"{department.Name}\" departamento ir jam priskirtos jo paskaitos");
-
+            var newLectures = department.Lectures.Where(l => !student.Lectures.Any(sl => sl.Title == l.Title)).ToList();
+            if (newLectures.Any())
+            {
+                student.Lectures.AddRange(newLectures);
+                context.SaveChanges();
+                Console.WriteLine($"Studentas {student.Name} priskirtas prie \"{department.Name}\" departamento ir jam priskirtos {newLectures.Count} naujos paskaitos");
+            }
+            else
+            {
+                Console.WriteLine($"Studentas {student.Name} jau turi visas \"{department.Name}\" departamento paskaitas. Nebuvo pridėta jokiu nauju paskaitu");
+            }
             Console.ReadKey();
             Console.Clear();
         }
 
+        public void TransferStudent(AppDbContext context)
+        {
+            Console.Clear();
+            Console.WriteLine("Iveskite studento varda ir pavarde");
+            string studentName = Console.ReadLine();
+
+            Console.WriteLine("Iveskite naujo departamento pavadinima");
+            string newDepartmentName = Console.ReadLine();
+
+            var student = context.Students.Include(s => s.Lectures).FirstOrDefault(s => s.Name == studentName);
+
+            if (student == null)
+            {
+                Console.WriteLine("Studentas nerastas");
+                return;
+            }
+
+            var newDepartment = context.Departments.Include(d=> d.Lectures).FirstOrDefault(d => d.Name == newDepartmentName);
+            if (newDepartment == null)
+            {
+                Console.WriteLine("Departamentas nerastas");
+                return;
+            }
+
+            student.Department = newDepartment;
+            student.Lectures = newDepartment.Lectures.ToList();
+            context.SaveChanges();
+            Console.WriteLine($"Studentas {student.Name} perkeltas i \"{newDepartment.Name}\" departamenta ");
+            Console.ReadKey();
+            Console.Clear();
+
+        }
 
 
         public void DisplayLecturesByStudents(AppDbContext context)

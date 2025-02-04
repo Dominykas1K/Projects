@@ -26,6 +26,7 @@ namespace DB_projektas
                 Console.WriteLine("5. Atvaizduoti visus Departamento studentus");
                 Console.WriteLine("6. Atvaizduoti visas Departamento paskaitas");
                 Console.WriteLine("7. Atvaizduoti visas Paskaitas pagal studenta");
+                Console.WriteLine("8. Istrinti visus irasus is duomenu bazes");
 
                 var input = Console.ReadLine();
 
@@ -43,6 +44,7 @@ namespace DB_projektas
                         studentRepository.AddStudentToLecture(context);
                         break;
                     case "4":
+                        studentRepository.TransferStudent(context);
                         break;
                     case "5":
                         departmentRepository.DisplayStudents(context);                      
@@ -53,8 +55,13 @@ namespace DB_projektas
                     case "7":
                         studentRepository.DisplayLecturesByStudents(context);
                         break;
+                    case "8":
+                        lectureRepository.DeleteAllData(context);
+                        break;
                     default:
                         Console.WriteLine("Neteisingas pasirinkimas");
+                        Console.ReadKey();
+                        Console.Clear();
                         break;
 
                 }
