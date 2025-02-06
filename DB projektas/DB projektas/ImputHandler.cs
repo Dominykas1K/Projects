@@ -10,7 +10,7 @@ namespace DB_projektas
     {
         public static string FormatedInput()
         {
-            string input = Console.ReadLine()?.Trim();
+            string? input = Console.ReadLine()?.Trim();
             if (string.IsNullOrEmpty(input))
             {
                 return string.Empty;

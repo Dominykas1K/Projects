@@ -10,7 +10,12 @@ namespace DB_projektas.Repositories
 {
     public class StudentRepository
     {
-        public void AddStudentToLecture(AppDbContext context)
+        private readonly AppDbContext _context;
+        public StudentRepository(AppDbContext context)
+        {
+            _context = context;
+        }
+        public void AddStudentToLecture()
         {
             Console.Clear();
             Console.WriteLine("Iveskite studento varda ir pavarde");
@@ -19,7 +24,7 @@ namespace DB_projektas.Repositories
             Console.WriteLine("Iveskite departamento pavadinima");
             string departmentName = ImputHandler.FormatedInput();
 
-            var department = context.Departments.Include(d => d.Lectures).FirstOrDefault(d => d.Name == departmentName);
+            var department = _context.Departments.Include(d => d.Lectures).FirstOrDefault(d => d.Name == departmentName);
 
             if(department == null)
             {
@@ -27,11 +32,11 @@ namespace DB_projektas.Repositories
                 return;
             }
 
-            var student = context.Students.Include(s => s.Lectures).FirstOrDefault(s => s.Name == studentName);
+            var student = _context.Students.Include(s => s.Lectures).FirstOrDefault(s => s.Name == studentName);
             if (student == null)
             {
                 student = new Entities.Student { Name = studentName, Department = department };
-                context.Students.Add(student);
+                _context.Students.Add(student);
             }
             else
             {
@@ -42,7 +47,7 @@ namespace DB_projektas.Repositories
             if (newLectures.Any())
             {
                 student.Lectures.AddRange(newLectures);
-                context.SaveChanges();
+                _context.SaveChanges();
                 Console.WriteLine($"Studentas {student.Name} priskirtas prie \"{department.Name}\" departamento ir jam priskirtos {newLectures.Count} naujos paskaitos");
             }
             else
@@ -53,7 +58,7 @@ namespace DB_projektas.Repositories
             Console.Clear();
         }
 
-        public void TransferStudent(AppDbContext context)
+        public void TransferStudent()
         {
             Console.Clear();
             Console.WriteLine("Iveskite studento varda ir pavarde");
@@ -62,7 +67,7 @@ namespace DB_projektas.Repositories
             Console.WriteLine("Iveskite naujo departamento pavadinima");
             string newDepartmentName = ImputHandler.FormatedInput();
 
-            var student = context.Students.Include(s => s.Lectures).FirstOrDefault(s => s.Name == studentName);
+            var student = _context.Students.Include(s => s.Lectures).FirstOrDefault(s => s.Name == studentName);
 
             if (student == null)
             {
@@ -70,7 +75,7 @@ namespace DB_projektas.Repositories
                 return;
             }
 
-            var newDepartment = context.Departments.Include(d=> d.Lectures).FirstOrDefault(d => d.Name == newDepartmentName);
+            var newDepartment = _context.Departments.Include(d=> d.Lectures).FirstOrDefault(d => d.Name == newDepartmentName);
             if (newDepartment == null)
             {
                 Console.WriteLine("Departamentas nerastas");
@@ -79,7 +84,7 @@ namespace DB_projektas.Repositories
 
             student.Department = newDepartment;
             student.Lectures = newDepartment.Lectures.ToList();
-            context.SaveChanges();
+            _context.SaveChanges();
             Console.WriteLine($"Studentas {student.Name} perkeltas i \"{newDepartment.Name}\" departamenta ");
             Console.ReadKey();
             Console.Clear();
@@ -87,13 +92,13 @@ namespace DB_projektas.Repositories
         }
 
 
-        public void DisplayLecturesByStudents(AppDbContext context)
+        public void DisplayLecturesByStudents()
         {
             Console.Clear();
             Console.WriteLine("Iveskite Studento varda ir pavarde");
             string studentName = ImputHandler.FormatedInput();
 
-            var student = context.Students.Include(s => s.Lectures).FirstOrDefault(s => s.Name == studentName);
+            var student = _context.Students.Include(s => s.Lectures).FirstOrDefault(s => s.Name == studentName);
 
             if (student == null)
             {

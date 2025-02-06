@@ -10,15 +10,20 @@ using System.Threading.Tasks;
 namespace DB_projektas.Repositories
 {
     public class LectureRepository
-    {       
-        public void DisplayLectures(AppDbContext context)
+    {
+        private readonly AppDbContext _context;
+        public LectureRepository(AppDbContext context)
+        {
+            _context = context;
+        }
+        public void DisplayLectures()
         {
             Console.Clear();
             Console.WriteLine("Iveskite departamento pavadinima");
 
             string departmentName = ImputHandler.FormatedInput();
 
-            var department = context.Departments.Include(d => d.Lectures).FirstOrDefault(d => d.Name == departmentName);
+            var department = _context.Departments.Include(d => d.Lectures).FirstOrDefault(d => d.Name == departmentName);
 
             if (department == null)
             {
@@ -42,14 +47,14 @@ namespace DB_projektas.Repositories
             Console.Clear();
         }
 
-        public void DeleteAllData(AppDbContext context)
+        public void DeleteAllData()
         {
             Console.Clear();
-            context.Students.RemoveRange(context.Students);
-            context.Lectures.RemoveRange(context.Lectures);
-            context.Departments.RemoveRange(context.Departments);
+            _context.Students.RemoveRange(_context.Students);
+            _context.Lectures.RemoveRange(_context.Lectures);
+            _context.Departments.RemoveRange(_context.Departments);
 
-            context.SaveChanges();
+            _context.SaveChanges();
             Console.WriteLine("Irasai istrinti");
             Console.ReadKey();
             Console.Clear();

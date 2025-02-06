@@ -12,12 +12,18 @@ namespace DB_projektas.Repositories
 {
     public class DepartmentRepository
     {
-        public void CreateDepartment(AppDbContext context)
+        private readonly AppDbContext _context;
+        public DepartmentRepository(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public void CreateDepartment()
         {
             Console.Clear();
             Console.WriteLine("Iveskite departamento pavadinima");
             string input = ImputHandler.FormatedInput();
-            var existingDepartment = context.Departments.FirstOrDefault(d => d.Name == input);
+            var existingDepartment = _context.Departments.FirstOrDefault(d => d.Name == input);
             if (existingDepartment != null)
             {
                 Console.WriteLine("Toks departamentas jau egzistuoja");
@@ -25,8 +31,8 @@ namespace DB_projektas.Repositories
             else
             {
                 var department = new Department { Name = input };
-                context.Departments.Add(department);
-                context.SaveChanges();
+                _context.Departments.Add(department);
+                _context.SaveChanges();
 
                 Console.WriteLine("Departamentas pridetas");
             }
@@ -34,13 +40,13 @@ namespace DB_projektas.Repositories
             Console.Clear();
         }
 
-        public void AddToDepartment(AppDbContext context)
+        public void AddToDepartment()
         {
             Console.Clear();
             Console.WriteLine("Iveskite departamento pavadinima");
             string input = ImputHandler.FormatedInput();
 
-            var department = context.Departments.FirstOrDefault(d => d.Name == input);
+            var department = _context.Departments.FirstOrDefault(d => d.Name == input);
 
             if (department == null)
             {
@@ -60,27 +66,27 @@ namespace DB_projektas.Repositories
             {
                 var lecture = new Lecture { Title = lectureName };
                 department.Lectures.Add(lecture);
-                context.SaveChanges();
+                _context.SaveChanges();
                 Console.WriteLine("Paskaita prideta");
             }
             Console.ReadKey();
             Console.Clear();
         }
 
-        public void DisplayStudents(AppDbContext context)
+        public void DisplayStudents()
         {
             Console.Clear();
             Console.WriteLine("Iveskite departamento pavadinima");
             string departmentName = ImputHandler.FormatedInput(); 
 
-            var department = context.Departments.FirstOrDefault(d => d.Name == departmentName);
+            var department = _context.Departments.FirstOrDefault(d => d.Name == departmentName);
             if (department == null)
             {
                 Console.WriteLine("Departamentas nerastas");
                 return;
             }
 
-            var students = context.Students.Where(s =>s.DepartmentID == department.Id).ToList();
+            var students = _context.Students.Where(s =>s.DepartmentID == department.Id).ToList();
 
             Console.WriteLine($"Departamento \"{department.Name}\"  studentai:");
             if (students.Count == 0)

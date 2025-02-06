@@ -13,9 +13,10 @@ namespace DB_projektas
     {
         public void Run()
         {
-            var departmentRepository = new DepartmentRepository();
-            var lectureRepository = new LectureRepository();
-            var studentRepository = new StudentRepository();
+            using var context = new AppDbContext();
+            var departmentRepository = new DepartmentRepository(context);
+            var lectureRepository = new LectureRepository(context);
+            var studentRepository = new StudentRepository(context);
             while (true)
             {
                 Console.WriteLine("Studentu informacine sistema");
@@ -30,33 +31,31 @@ namespace DB_projektas
 
                 var input = Console.ReadLine();
 
-                using var context = new AppDbContext();
-
                 switch (input)
                 {
                     case "1":
-                        departmentRepository.CreateDepartment(context);
+                        departmentRepository.CreateDepartment();
                         break;
                     case "2":
-                        departmentRepository.AddToDepartment(context);
+                        departmentRepository.AddToDepartment();
                         break;                   
                     case "3":
-                        studentRepository.AddStudentToLecture(context);
+                        studentRepository.AddStudentToLecture();
                         break;
                     case "4":
-                        studentRepository.TransferStudent(context);
+                        studentRepository.TransferStudent();
                         break;
                     case "5":
-                        departmentRepository.DisplayStudents(context);                      
+                        departmentRepository.DisplayStudents();                      
                         break;
                     case "6":
-                        lectureRepository.DisplayLectures(context);
+                        lectureRepository.DisplayLectures();
                         break;
                     case "7":
-                        studentRepository.DisplayLecturesByStudents(context);
+                        studentRepository.DisplayLecturesByStudents();
                         break;
                     case "8":
-                        lectureRepository.DeleteAllData(context);
+                        lectureRepository.DeleteAllData();
                         break;
                     default:
                         Console.WriteLine("Neteisingas pasirinkimas");
